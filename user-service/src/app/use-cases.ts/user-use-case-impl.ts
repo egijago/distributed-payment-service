@@ -1,6 +1,8 @@
 import {
     ICreateUserRequest,
     ICreateUserResponse,
+    IDeleteUserRequest,
+    IDeleteUserResponse,
     IReadAllUsersResponse,
     IReadUserRequest,
     IReadUserResponse,
@@ -10,8 +12,9 @@ import {
 import { IUserRepository } from "../repositories/user-repository"
 import { User } from "../../domain/entities/user"
 import { IReadAllUsersRequest } from "../../domain/dtos/read-all-users-request"
+import { UserUseCase } from "./user-use-case"
 
-export class UserUseCaseImpl {
+export class UserUseCaseImpl implements UserUseCase {
     constructor(private repository: IUserRepository) {}
 
     async createUser(
@@ -51,7 +54,7 @@ export class UserUseCaseImpl {
         return { user }
     }
 
-    async deleteUser(request: IReadUserRequest): Promise<IReadUserResponse> {
+    async deleteUser(request: IDeleteUserRequest): Promise<IDeleteUserResponse> {
         const user = await this.repository.delete(request.id)
 
         return { user }
