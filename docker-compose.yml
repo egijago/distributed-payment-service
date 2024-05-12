@@ -2,7 +2,6 @@ version: "3.7"
 
 services:
   transaction-service-db:
-    hostname: transaction-service-db
     image: mongo:7.0
     command: ["--replSet", "rs0", "--bind_ip_all", "--port", "27017"]
     ports:
@@ -17,23 +16,39 @@ services:
       start_interval: 1s
       retries: 30
     volumes:
-      - "./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo-js:ro"
       - "mongo1_data:/data/db"
       - "mongo1_config:/data/configdb"
 
   transaction-command-service:
     build:
-      context: .
+      context: ./transaction-command-service/.
     ports:
       - "8001:8000"
-    env_file:
-      - .env
     volumes:
-      - ".:/app"
+      - "./transaction-command-service/.:/app"
       - "/app/node_modules"
     command: >
       sh -c "
             npx prisma db push &&
+            npx prisma generate dev &&
+            npm run dev"
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    depends_on:
+      transaction-service-db:
+        condition: service_healthy
+  transaction-query-service:
+    build:
+      context: ./transaction-query-service/.
+    ports:
+      - "8002:8000"
+    env_file:
+      - ./transaction-query-service/.env
+    volumes:
+      - "./transaction-query-service/.:/app"
+      - "/app/node_modules"
+    command: >
+      sh -c "
             npx prisma generate dev &&
             npm run dev"
     environment:
