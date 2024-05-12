@@ -34,7 +34,7 @@ router.post("/transactions/transfer", async (req: Request, res: Response) => {
 router.get("/transactions/:id", async (req: Request, res: Response) => {
     try {
         const id = req.params.id;
-        redisClient.get(`transaction:${id}`, async (err: any, cachedData: any) => {
+        redisClient.get(`/transactions/${id}`, async (err: any, cachedData: any) => {
             if (err) {
                 throw new Error('Error accessing Redis cache');
             }
@@ -43,7 +43,7 @@ router.get("/transactions/:id", async (req: Request, res: Response) => {
             } else {
                 const response = await fetch(TRANSACTION_QUERY_SERVICE_URL + "/transactions/" + id);
                 const data = await response.json();
-                redisClient.set(`transaction:${id}`, JSON.stringify(data));
+                redisClient.set(`/transactions/${id}`, JSON.stringify(data));
                 res.status(200).json({ success: true, data });
             }
         });
@@ -55,16 +55,16 @@ router.get("/transactions/:id", async (req: Request, res: Response) => {
 router.get("/transactions/user/:user_id", async (req: Request, res: Response) => {
     try {
         const user_id = req.params.user_id;
-        redisClient.get(`transaction/user/user_id:${user_id}`, async (err: any, cachedData: any) => {
+        redisClient.get(`/transactions/user/${user_id}`, async (err: any, cachedData: any) => {
             if (err) {
                 throw new Error('Error accessing Redis cache');
             }
             if (cachedData) {
                 res.status(200).json({ success: true, data: JSON.parse(cachedData) });
             } else {
-                const response = await fetch(TRANSACTION_QUERY_SERVICE_URL + "/transactions/" + user_id);
+                const response = await fetch(TRANSACTION_QUERY_SERVICE_URL + "/transactions/user/" + user_id);
                 const data = await response.json();
-                redisClient.set(`transaction/user/user_id:${user_id}`, JSON.stringify(data));
+                redisClient.set(`/transactions/user/${user_id}`, JSON.stringify(data));
                 res.status(200).json({ success: true, data });
             }
         });

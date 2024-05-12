@@ -51,7 +51,7 @@ export async function emitUpdateTransactionDestBalanceEvent({
         "type": "update",
         "data": {
             "id": id,
-            "dest_init_bal": dest_init_bal,
+            "dest_init_bal": dest_init_bal
         }
     };
     const messages = [{ key: "", value: JSON.stringify(event) }];

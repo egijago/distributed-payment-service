@@ -35,20 +35,20 @@ kafkaConfig.consume("transaction", async (key: any, value: any) => {
     if (value.type == "create-response") {
         if (value.success) {
             const transaction = value.data.transaction
-            const { data, success } = await addBalanceToUser(transaction.dest_user_id, transaction.amount)
-            if (!success) { // Update user dest balance fail
+            const { data } = await addBalanceToUser(transaction.dest_user_id, transaction.amount)
+            if (!data.success) { // Update user dest balance fail
                 DLQ.push({key, value})
                 console.log("Transaction failed when updating user dest balance")
             }
             await emitUpdateTransactionDestBalanceEvent({
                 id: transaction.id,
-                dest_init_bal: data.balance
+                dest_init_bal: data.data.user.balance - transaction.amount
             })
             console.log("User balance updated successfully")
         } else { //Write ledger fail
             const transaction = value.data.transaction
-            const { data, success } = await addBalanceToUser(transaction.source_user_id, transaction.amount) // compensating transaction
-            if (!success) { // Compensating transaction fail
+            const { data} = await addBalanceToUser(transaction.source_user_id, transaction.amount) // compensating transaction
+            if (!data.success) { // Compensating transaction fail
                 DLQ.push({key, value})
                 console.log("Abort failed when updating user source balance.")
             }
