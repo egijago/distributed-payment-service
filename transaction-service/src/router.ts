@@ -31,27 +31,6 @@ router.post("/transactions/transfer", async (req: Request, res: Response) => {
     }
 })
 
-router.get("/:params", async (req: Request, res: Response) => {
-    try {
-        const params = req.params.params
-
-        redisClient.get(params, async (err: any, reply: any) => {
-            if (err) {
-                console.error('Error getting value:', err);
-            } 
-            if (reply != null) {
-                console.log('Retrieved value from Redis:', reply);
-                return res.status(200).json({ message: reply, success: true })
-            } else {
-                redisClient.setex(params, DEFAULT_EXPIRATION, params)
-            } 
-        })
-        return res.status(200).json({ message: "Success", success: true })
-    } catch (error: any) {
-        res.status(500).json({ message: error.message, success: false })
-    }
-})
-
 router.get("/transactions/:id", async (req: Request, res: Response) => {
     try {
         const id = req.params.id;
