@@ -40,6 +40,7 @@ services:
         condition: service_healthy
 
   transaction-query-service:
+    hostname: transaction-query-service 
     build:
       context: ./transaction-query-service/.
     ports:
@@ -143,7 +144,18 @@ services:
     depends_on:
       user-service-db:
         condition: service_healthy
+  redis:
+    hostname: redis
+    image: redis:6.2-alpine
+    restart: always
+    ports:
+      - '6379:6379'
+    command: redis-server --save 20 1 --loglevel warning
+    volumes: 
+      - redis:/data
 
 volumes:
   mongo1_data:
   mongo1_config:
+  redis:
+    driver: local
