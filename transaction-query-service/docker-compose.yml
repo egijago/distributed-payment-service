@@ -1,7 +1,5 @@
 version: "3.7"
-volumes:
-  mongo1_data:
-  mongo1_config:
+
 services:
   transaction-service-db:
     image: mongo:7.0
@@ -21,7 +19,7 @@ services:
       - "mongo1_data:/data/db"
       - "mongo1_config:/data/configdb"
 
-  transaction-service:
+  transaction-query-service:
     build:
       context: .
     ports:
@@ -41,3 +39,6 @@ services:
     depends_on:
       transaction-service-db:
         condition: service_healthy
+volumes:
+  mongo1_data:
+  mongo1_config:
