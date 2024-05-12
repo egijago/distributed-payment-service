@@ -1,4 +1,6 @@
 import {
+    IAddBalanceToUserRequest,
+    IAddBalanceToUserResponse,
     ICreateUserRequest,
     ICreateUserResponse,
     IDeleteUserRequest,
@@ -56,6 +58,17 @@ export class UserUseCaseImpl implements UserUseCase {
 
     async deleteUser(request: IDeleteUserRequest): Promise<IDeleteUserResponse> {
         const user = await this.repository.delete(request.id)
+
+        return { user }
+    }
+
+    async addBalanceToUser(
+        request: IAddBalanceToUserRequest,
+    ): Promise<IAddBalanceToUserResponse> {
+        const user = await this.repository.addBalance({
+            id: request.id,
+            amount: request.amount,
+        })
 
         return { user }
     }

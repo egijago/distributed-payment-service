@@ -66,6 +66,16 @@ export class ExpressPresentation {
             }
         })
 
+        this.router.post("/users/:id/balance/add", async (req: Request, res: Response) => {
+            try {
+                const id = Number(req.params.id)
+                const amount = Number(req.body.amount)
+                const response = await useCase.addBalanceToUser({ id, amount })
+                res.status(200).json({success: true, data: response})
+            } catch (error: any) {
+                res.status(500).json({ message: error.message, success: false })
+            }
+        })
     }
 
     getRouter() {

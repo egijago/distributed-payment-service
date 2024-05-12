@@ -16,7 +16,7 @@ export class ExpressPresentation {
             }
         })
 
-        this.router.get("transactions/user/:user_id", async (req: Request, res: Response) => {
+        this.router.get("/transactions/user/:user_id", async (req: Request, res: Response) => {
             try {
                 const user_id = Number(req.params.user_id)
                 const response = await useCase.readTransactionsByUserID({ user_id })

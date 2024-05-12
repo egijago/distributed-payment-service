@@ -87,4 +87,24 @@ export class UserRepositoryImpl implements IUserRepository {
             balance: Number(_user.balance),
         }
     }
+
+    async addBalance({ id, amount }: { id: number; amount: number }): Promise<User> {
+        const _user = await this.prisma.user.update({
+            where: {
+                id: id,
+            },
+            data: {
+                balance: {
+                    increment: amount,
+                },
+            },
+        })
+
+        return {
+            id: _user.id,
+            username: _user.username,
+            password: _user.password,
+            balance: Number(_user.balance),
+        }
+    }
 }

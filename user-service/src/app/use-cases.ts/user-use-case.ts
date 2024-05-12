@@ -9,6 +9,8 @@ import {
     IUpdateUserResponse,
     IReadAllUsersRequest,
     IReadAllUsersResponse,
+    IAddBalanceToUserRequest,
+    IAddBalanceToUserResponse,
 } from "../../domain/dtos"
 export interface UserUseCase {
     createUser(request: ICreateUserRequest): Promise<ICreateUserResponse>
@@ -16,4 +18,5 @@ export interface UserUseCase {
     readAllUsers(request: IReadAllUsersRequest): Promise<IReadAllUsersResponse>
     updateUser(request: IUpdateUserRequest): Promise<IUpdateUserResponse>
     deleteUser(request: IDeleteUserRequest): Promise<IDeleteUserResponse>
+    addBalanceToUser(request: IAddBalanceToUserRequest): Promise<IAddBalanceToUserResponse>
 }

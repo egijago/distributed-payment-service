@@ -24,4 +24,11 @@ export interface IUserRepository {
         balance: number
     }): Promise<User>
     delete(id: number): Promise<User>
+    addBalance({
+        id,
+        amount,
+    }: {
+        id: number
+        amount: number
+    }): Promise<User>
 }
